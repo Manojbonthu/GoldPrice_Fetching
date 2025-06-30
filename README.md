@@ -31,9 +31,9 @@ This Python script fetches the **daily 22kt gold price (per 10 grams)** from the
 
 
 
-# Configure your Twilio credentials in the script  
-TWILIO_ACCOUNT_SID = "Your_Twilio_Account_SID"
-TWILIO_AUTH_TOKEN = "Your_Twilio_Auth_Token"
-TWILIO_WHATSAPP_FROM = "whatsapp:+14155238886"  # Twilio sandbox number
-TWILIO_WHATSAPP_TO = "whatsapp:+91XXXXXXXXXX"   # Your verified number
+## Configure your Twilio credentials in the script  
+- TWILIO_ACCOUNT_SID = "Your_Twilio_Account_SID"
+- TWILIO_AUTH_TOKEN = "Your_Twilio_Auth_Token"
+- TWILIO_WHATSAPP_FROM = "whatsapp:+14155238886"  # Twilio sandbox number
+- TWILIO_WHATSAPP_TO = "whatsapp:+91XXXXXXXXXX"   # Your verified number
 
