@@ -1,28 +1,22 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-import schedule
-import time
 from datetime import datetime
 from twilio.rest import Client
+import os
 
-# ───────────────────────────────────────────────────────────
-# 🔒 TWILIO CONFIGURATION — REPLACE with your actual values
-# ───────────────────────────────────────────────────────────
-TWILIO_ACCOUNT_SID = "Your_Twlio Account Number"
-TWILIO_AUTH_TOKEN = "Your_Twlio Account Token"
+# Twilio credentials from GitHub Secrets
+TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
 
-# Twilio sandbox FROM number (must start with 'whatsapp:')
-TWILIO_WHATSAPP_FROM = "whatsapp: Twilio sandbox FROM number"
+if not TWILIO_ACCOUNT_SID or not TWILIO_AUTH_TOKEN:
+    raise ValueError("Twilio credentials not set in environment variables.")
 
-# Your verified WhatsApp number (must start with 'whatsapp:')
-TWILIO_WHATSAPP_TO = "whatsapp: Your Whatsapp Number"
-
-# Time to send the message daily
-SCHEDULE_TIME = "13:40"
-# ───────────────────────────────────────────────────────────
+TWILIO_WHATSAPP_FROM = "whatsapp:+14155238886"
+TWILIO_WHATSAPP_TO = "whatsapp:+919553734629"
 
 twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
 
 def fetch_22kt_price_str():
     url = "https://www.goldenchennai.com/finance/gold-rate-in-andhra-pradesh/"
@@ -95,11 +89,6 @@ def job():
         print(f"{timestamp} Error: {e}")
 
 if __name__ == "__main__":
-    # Uncomment the next line to test immediately:
-    # job()
+    job()
 
-    schedule.every().day.at(SCHEDULE_TIME).do(job)
-    print(f"Scheduler started. Waiting to run daily at {SCHEDULE_TIME}…")
-    while True:
-        schedule.run_pending()
-        time.sleep(30)
+
