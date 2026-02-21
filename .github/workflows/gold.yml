@@ -2,7 +2,7 @@ name: Gold Price Daily Job
 
 on:
   schedule:
-    - cron: '44 4 * * *'
+   - cron: '30 18 * * *'
 
   workflow_dispatch:
 
