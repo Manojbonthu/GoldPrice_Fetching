@@ -2,21 +2,12 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from datetime import datetime
-from twilio.rest import Client
 import os
+from urllib.parse import quote
 
-# Twilio credentials from GitHub Secrets
-TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
-TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
-
-if not TWILIO_ACCOUNT_SID or not TWILIO_AUTH_TOKEN:
-    raise ValueError("Twilio credentials not set in environment variables.")
-
-TWILIO_WHATSAPP_FROM = "whatsapp:+14155238886"
-TWILIO_WHATSAPP_TO = "whatsapp:+919553734629"
-
-twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-
+# CallMeBot credentials
+CALLMEBOT_PHONE = os.environ.get("CALLMEBOT_PHONE")   # e.g. 919553734629
+CALLMEBOT_APIKEY = os.environ.get("CALLMEBOT_APIKEY") # e.g. 1234567
 
 def fetch_22kt_price_str():
     url = "https://www.goldenchennai.com/finance/gold-rate-in-andhra-pradesh/"
@@ -65,30 +56,34 @@ def fetch_22kt_price_str():
 
     raise RuntimeError("22kt gold price for 10 grams not found.")
 
-def send_whatsapp_via_twilio(msg_body: str):
-    message = twilio_client.messages.create(
-        body=msg_body,
-        from_=TWILIO_WHATSAPP_FROM,
-        to=TWILIO_WHATSAPP_TO
+
+def send_whatsapp(msg: str):
+    encoded_msg = quote(msg)
+    url = (
+        f"https://api.callmebot.com/whatsapp.php"
+        f"?phone={CALLMEBOT_PHONE}&text={encoded_msg}&apikey={CALLMEBOT_APIKEY}"
     )
-    return message.sid
+    response = requests.get(url)
+    if response.status_code == 200:
+        print("✅ WhatsApp message sent!")
+    else:
+        print(f"❌ Failed to send: {response.text}")
+
 
 def job():
     try:
         price_str = fetch_22kt_price_str()
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        output_line = f"{timestamp} 22kt gold price for 10 grams: INR {price_str}"
-        print(output_line)
+        print(f"{timestamp} | 22kt Gold (10g): INR {price_str}")
 
-        whatsapp_msg = f"22kt gold price for 10 grams: INR {price_str}"
-        sid = send_whatsapp_via_twilio(whatsapp_msg)
-        print(f"WhatsApp sent (SID: {sid})")
+        msg = f"🪙 22kt Gold Price (10g) in AP: INR {price_str}\n🕐 {timestamp}"
+        send_whatsapp(msg)
 
     except Exception as e:
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         print(f"{timestamp} Error: {e}")
+        send_whatsapp(f"⚠️ Gold price fetch failed:\n{e}")
+
 
 if __name__ == "__main__":
     job()
-
-
