@@ -2,7 +2,7 @@ name: Gold Price Daily Job
 
 on:
   schedule:
-   - cron: '30 18 * * *'
+    - cron: '30 3 * * *'  # 3:30 AM UTC = 9:00 AM IST
 
   workflow_dispatch:
 
@@ -24,6 +24,6 @@ jobs:
 
       - name: Run script
         env:
-          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
-          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          CALLMEBOT_PHONE: ${{ secrets.CALLMEBOT_PHONE }}
+          CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
         run: python main.py
