@@ -2,9 +2,9 @@ name: Gold Price Daily Job
 
 on:
   schedule:
-    - cron: '30 3 * * *'  # 9:00 AM IST daily
+    - cron: '51 9 * * *'  # 3:21 PM IST daily
 
-  workflow_dispatch:       # allows manual trigger
+  workflow_dispatch:
 
 jobs:
   run-script:
